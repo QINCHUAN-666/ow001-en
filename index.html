@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Osmo Compatibility Checker</title>
+<style>
+    body {
+        background-color: #f5f7fa;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+    header {
+        background-color: #1e4f91;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        font-size: 26px;
+        font-weight: bold;
+        border-radius: 0 0 12px 12px;
+        box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
+    }
+    .tabs {
+        display: flex;
+        background-color: white;
+        padding: 5px;
+        border-radius: 8px;
+        max-width: 1200px;
+        margin: 20px auto 0;
+        box-shadow: 0px 2px 8px rgba(0,0,0,0.05);
+    }
+    .tab {
+        padding: 12px 20px;
+        cursor: pointer;
+        font-size: 16px;
+        border-radius: 6px;
+        transition: all 0.2s;
+        margin-right: 5px;
+    }
+    .tab.active {
+        background-color: #1e4f91;
+        color: white;
+        font-weight: bold;
+    }
+    .content-card {
+        background-color: white;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        max-width: 1200px;
+        margin: 20px auto;
+    }
+    label {
+        display: block;
+        margin: 10px 0 5px;
+        font-weight: bold;
+    }
+    select, input {
+        width: 100%;
+        padding: 10px;
+        border-radius: 6px;
+        border: 1px solid #d1d5db;
+        font-size: 14px;
+        outline: none;
+        transition: border 0.2s;
+    }
+.suggestion-wrapper {
+    position: relative;
+    width: 100%;
+}
+#modelSuggestionList {
+    position: absolute;
+    top: 38px;
+    left: 0;
+    width: 100%;
+    background: #fff;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-height: 200px;
+    overflow-y: auto;
+    display: none;
+    z-index: 999;
+}
+    select:focus, input:focus {
+        border-color: #1e4f91;
+    }
+    button {
+        margin-top: 20px;
+        background-color: #1e4f91;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 6px;
+        font-size: 14px;
+        cursor: pointer;
+    }
+    button:hover {
+        background-color: #163c6b;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    th, td {
+        padding: 8px;
+        text-align: center;
+        border: 1px solid #e5e7eb;
+        font-size: 14px;
+    }
+    th {
+        background-color: #f0f2f5;
+    }
+    tr.highlight {
+        background-color: #fef9c3;
+    }
+</style>
+</head>
+<body>
+<header>Osmo Compatibility Checker</header>
+<!-- Tabs -->
+<div class="tabs">
+    <div class="tab active" data-tab="parts">Accessory Compatibility</div>
+    <div class="tab" data-tab="charger">Charger Compatibility</div>
+</div>
+
+<!-- Accessory Compatibility -->
+<div class="content-card tab-content" id="parts">
+    <label>Select Product:</label>
+<select id="productSelect">
+    <option value="">Please select a product</option>
+    <option>Osmo Nano</option>
+    <option>Osmo 360</option>
+    <option>Osmo Action 5 Pro</option>
+    <option>Osmo Action 4</option>
+    <option>Osmo Action 3</option>
+    <option>DJI Action 2</option>
+    <option>Osmo Action Intelligent Camera</option>
+</select>
+    <label>Select Accessory:</label>
+<div style="position:relative;">
+  <input type="text" id="searchInput" placeholder="Enter or select accessory name">
+  <ul id="suggestionList"
+      style="position:absolute;top:38px;left:0;width:100%;background:#fff;border:1px solid #d1d5db;
+             border-radius:6px;box-shadow:0 2px 5px rgba(0,0,0,0.1);list-style:none;margin:0;padding:0;
+             max-height:200px;overflow-y:auto;display:none;z-index:999;">
+  </ul>
+</div>
+    <button id="searchBtn">Check Compatibility</button>
+    <table id="resultTable" style="display:none;">
+        <thead>
+            <tr>
+                <th>Accessory Name</th>
+                <th>Product</th>
+                <th>Compatibility</th>
+                <th>Remarks</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<!-- Charger Compatibility -->
+<div class="content-card tab-content" id="charger" style="display:none;">
+    <label>Select Brand:</label>
+    <select id="brandSelect">
+        <option value="">Please select a brand</option>
+    </select>
+    <label>Select Type:</label>
+    <select id="typeSelect">
+        <option value="">Please select a type</option>
+    </select>
+    <label>Select Model:</label>
+<div class="suggestion-wrapper">
+  <input type="text" id="modelInput" placeholder="Enter or select model" autocomplete="off">
+  <ul id="modelSuggestionList"></ul>
+</div>
+    <button id="chargerSearchBtn">Check Compatibility</button>
+    <table id="chargerResultTable" style="display:none;">
+        <thead>
+            <tr>
+                <th>Brand</th>
+                <th>Type</th>
+                <th>Model</th>
+                <th>Compatible</th>
+                <th>Remarks</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<script>
+/* ===== Extra Remarks Mapping ===== */
+const extraRemarks = {
+    "√1": "Requires purchasing Osmo dual quick-release foldable adapter.",
+    "√2": "Requires purchasing Osmo Action quick-release adapter."
+};
+
+/* ===== Accessory data (to be filled later) ===== */
+const partsData = [
+    // Format: [Accessory Name, Osmo Nano, Nano remarks, Osmo 360, 360 remarks, Osmo Action 5 Pro, Osmo Action 4, Osmo Action 3, DJI Action 2, Osmo Action Intelligent Camera]
+  ["Osmo Action Multifunctional Charging Handle", "×", "", "×", "", "√", "", "√", "", "×", "", "×", "", "×", ""],
+  ["Osmo Action FOV Boost Lens", "×", "", "×", "", "√", "", "√", "", "×", "", "×", "", "×", ""],
+  ["Osmo Action Cold Shoe Expansion Kit", "×", "", "×", "", "√", "", "√", "", "√", "", "×", "", "×", ""],
+  ["Osmo Helmet Chin Mount Clip", "√1", "", "√2", "", "√", "", "√", "", "√", "", "√", "", "√", ""],
+  ["Osmo Flexible Mount", "√1", "", "×", "", "√", "", "√", "", "√", "", "√", "", "√", ""],
+  ["Osmo Action Extreme Battery Plus (1950 mAh)", "×", "", "√", "", "√", "", "√", "", "√", "", "×", "", "×", ""],
+  ["Osmo Action 5 Pro Glass Lens Cover", "×", "", "×", "", "√", "", "×", "", "×", "", "×", "", "×", ""],
+  ["Osmo Action Mini Extension Rod", "×", "", "×", "", "√", "", "√", "", "√", "", "×", "", "×", ""],
+  ["Osmo Action 1.5m Extension Rod Kit", "√1", "", "×", "", "√", "", "√", "", "√", "", "√", "", "√", ""],
+  ["Osmo Action 360° Wrist Strap", "×", "", "√", "", "√", "", "√", "", "√", "", "×", "", "×", ""],
+  ["Osmo Action Curved Adhesive Base", "√1", "", "√2", "", "√", "", "√", "", "√", "", "√", "", "√", ""],
+  ["Osmo Action Curved Adhesive Base Kit", "√1", "", "√2", "", "√", "", "√", "", "√", "", "√", "", "√", ""],
+  ["Osmo Action Adhesive Base Kit", "√1", "", "√2", "", "√", "", "√", "", "√", "", "×", "", "×", ""],
+  ["Osmo Action Quick-Release Adapter Mount", "×", "", "√2", "", "√", "", "√", "", "√", "", "×", "", "×", ""],
+  ["Osmo Action Mounting Kit", "×", "", "×", "", "√", "", "√", "", "√", "", "√", "", "√", ""],
+  ["Osmo Magnetic Ball-Joint Adapter Mount", "×", "", "√", "", "√", "", "√", "", "√", "", "√", "", "×", ""],
+  ["Osmo Locking Screw", "√", "", "√", "", "√", "", "√", "", "√", "", "√", "", "√", ""],
+  ["Osmo Backpack Strap Mount", "√1", "", "√2", "", "√", "", "√", "", "√", "", "√", "", "√", ""],
+  ["Osmo Action Hanging Neck Mount", "√1", "", "√2", "", "√", "", "√", "", "√", "", "√", "", "√", ""],
+  ["Osmo Action Mini Handlebar Mount", "×", "", "√", "", "√", "", "√", "", "√", "", "×", "", "×", ""],
+  ["Osmo Action Handlebar Mount", "√", "", "√2", "", "√", "", "√", "", "√", "", "√", "", "√", ""],
+  ["Osmo Action Suction Cup Mount", "√", "", "√2", "", "√", "", "√", "", "√", "", "√", "", "√", ""],
+  ["Osmo Action Chest Strap Mount", "√", "", "√2", "", "√", "", "√", "", "√", "", "√", "", "√", ""],
+  ["Osmo Action Helmet Chin Mount", "√", "", "√2", "", "√", "", "√", "", "√", "", "√", "", "√", ""],
+  ["Osmo Action Biking Accessory Kit", "√", "", "√2", "", "√", "", "√", "", "√", "", "√", "", "√", ""],
+  ["Osmo Action Road Cycling Accessory Kit", "×", "", "√", "", "√", "", "√", "", "√", "", "×", "", "×", ""],
+  ["Osmo Action Bike Seat Rail Mount", "√1", "", "√2", "", "√", "", "√", "", "√", "", "√", "", "√", ""],
+  ["Osmo Action Surfing Tethers", "√", "", "√", "", "√", "", "√", "", "√", "", "√", "", "√", ""],
+  ["Osmo Action Surfing Tether Kit", "×", "", "√2", "", "√", "", "√", "", "√", "", "×", "", "×", ""],
+  ["Osmo Action 60m Waterproof Case", "×", "", "×", "", "√", "", "√", "", "√", "", "×", "", "×", ""],
+  ["Osmo Action Diving Accessory Kit", "×", "", "×", "", "√", "", "√", "", "√", "", "×", "", "×", ""],
+  ["DJI Floating Handle", "√", "", "×", "", "√", "", "√", "", "√", "", "√", "", "√", ""],
+  ["Osmo Action ND Filters Set", "×", "", "×", "", "√", "", "√", "", "√", "", "×", "", "×", ""],
+  ["Osmo Action 4 Glass Lens Cover", "×", "", "×", "", "×", "", "√", "", "×", "", "×", "", "×", ""],
+  ["Osmo Action Horizontal-Vertical Protective Frame", "×", "", "×", "", "√", "", "√", "", "√", "", "×", "", "×", ""],
+  ["Osmo Action GPS Bluetooth Remote Controller", "×", "", "√", "", "√", "", "√", "", "×", "", "×", "", "×", ""],
+  ["Osmo Action 3.5mm Audio Adapter", "×", "", "×", "", "√", "", "√", "", "√", "", "×", "", "×", ""],
+  ["Osmo Action Extreme Battery", "×", "", "√", "", "√", "", "√", "", "√", "", "×", "", "×", ""],
+  ["Osmo Action Multifunctional Battery Case", "×", "", "×", "", "×", "", "√", "", "√", "", "×", "", "×", ""],
+  ["Osmo Action Multifunctional Battery Case 2", "×", "", "√", "", "√", "", "√", "", "√", "", "×", "", "×", ""],
+  ["Type-C to Type-C PD Cable", "√", "", "×", "", "√", "", "√", "", "√", "", "√", "", "√", ""],
+  ["DJI 30W USB-C Charger", "√", "", "√", "", "√", "", "√", "", "√", "", "√", "", "√", ""],
+  ["DJI Action 2 Magnetic Protective Case", "×", "", "×", "", "×", "", "×", "", "×", "", "√", "", "×", ""],
+  ["DJI Action 2 Remote Control Extension Rod", "×", "", "×", "", "×", "", "×", "", "×", "", "√", "", "×", ""],
+  ["DJI Action 2 Waterproof Case", "×", "", "×", "", "×", "", "×", "", "×", "", "√", "", "×", ""],
+  ["DJI Action 2 Macro Lens", "×", "", "×", "", "×", "", "×", "", "×", "", "√", "", "×", ""],
+  ["DJI Action 2 Magnetic Clip", "×", "", "×", "", "×", "", "×", "", "×", "", "√", "", "×", ""],
+  ["DJI Action 2 Magnetic Ball-Joint Adapter Mount", "×", "", "×", "", "√", "", "√", "", "√", "", "√", "", "×", ""],
+  ["Osmo Action Bite Mount", "√", "", "√2", "", "√", "", "√", "", "√", "", "√", "", "√", ""],
+  ["Osmo 360 Battery Extension Rod", "×", "", "√", "", "×", "", "×", "", "×", "", "×", "", "×", ""],
+  ["Osmo Motorcycle Heavy-Duty Mount", "√", "", "√", "", "×", "", "×", "", "×", "", "×", "", "×", ""],
+  ["Osmo Adjustable Quick-Release Adapter Mount", "×", "", "√", "", "×", "", "×", "", "×", "", "×", "", "×", ""],
+  ["Osmo 360 Transparent Lens Protectors", "×", "", "√", "", "×", "", "×", "", "×", "", "×", "", "×", ""],
+  ["Osmo Hanging Neck Mount Max", "√", "", "√2", "", "√", "", "√", "", "√", "", "√", "", "√", ""],
+  ["Osmo Third-Person Helmet Mount Kit", "×", "", "√", "", "×", "", "×", "", "×", "", "×", "", "×", ""],
+  ["Osmo 70cm Invisible Selfie Stick", "√", "", "√", "", "×", "", "×", "", "×", "", "×", "", "×", ""],
+  ["Osmo 1m High-Strength Carbon Fiber Invisible Selfie Stick", "√", "", "√", "", "×", "", "×", "", "×", "", "×", "", "×", ""],
+  ["Osmo 1.2m Invisible Selfie Stick Kit", "√", "", "√", "", "×", "", "×", "", "×", "", "×", "", "×", ""],
+  ["Osmo 1.6m Tripod Selfie Stick", "√", "", "√", "", "×", "", "×", "", "×", "", "×", "", "×", ""],
+  ["Osmo 2.5m Extended Carbon Fiber Selfie Stick", "√", "", "√", "", "×", "", "×", "", "×", "", "×", "", "×", ""],
+  ["Osmo Dual Heavy-Duty Clamp", "√", "", "√", "", "√", "", "√", "", "√", "", "√", "", "√", ""],
+  ["Osmo Vortex Rotating Handle", "×", "", "√", "", "×", "", "×", "", "×", "", "×", "", "×", ""],
+  ["Osmo Bike Rear Mount Kit", "×", "", "√", "", "×", "", "×", "", "×", "", "×", "", "×", ""],
+  ["Osmo Action Battery", "×", "", "×", "", "×", "", "×", "", "×", "", "×", "", "√", ""],
+  ["Osmo 360 Carrying Bag", "×", "", "√", "", "×", "", "×", "", "×", "", "×", "", "×", ""],
+  ["Osmo Action Floating Case", "×", "", "×", "", "√", "", "√", "", "√", "", "×", "", "×", ""],
+  ["DJI Action 2 Magnetic Adapter Mount", "×", "", "×", "", "×", "", "×", "", "×", "", "√", "", "×", ""],
+  ["CYNOVA Osmo Action Dual 3.5mm Adapter", "×", "", "×", "", "×", "", "×", "", "×", "", "×", "", "√", ""],
+  ["Osmo Action Lens Hood", "×", "", "×", "", "√", "", "√", "", "×", "", "×", "", "×", ""],
+  ["Osmo Action Carrying Bag", "×", "", "×", "", "√", "", "√", "", "√", "", "×", "", "×", ""],
+  ["Osmo Action 4 Protective Camera Decal", "×", "", "×", "", "√", "", "√", "", "√", "", "×", "", "×", ""],
+  ["Osmo Magnetic Headband", "√", "", "×", "", "×", "", "×", "", "×", "", "×", "", "×", ""],
+  ["Osmo Magnetic Chest Strap", "√", "", "×", "", "×", "", "×", "", "×", "", "×", "", "×", ""],
+  ["Osmo Dual-Direction Quick-Release Foldable Adapter Mount", "√", "", "×", "", "×", "", "×", "", "×", "", "×", "", "×", ""],
+  ["Osmo Nano ND Filter Set", "√", "", "×", "", "×", "", "×", "", "×", "", "×", "", "×", ""],
+  ["Osmo Nano Glass Lens Cover", "√", "", "×", "", "×", "", "×", "", "×", "", "×", "", "×", ""],
+  ["Osmo Nano Dual-Direction Magnetic Ball-Joint Adapter Mount", "√", "", "×", "", "×", "", "×", "", "×", "", "×", "", "×", ""]
+];
+
+/* ===== Charger data (to be filled later) ===== */
+const chargerData = [
+    // Format: { brand:"Brand", type:"Type", model:"Model", compatible:"√/×", remark:"Remarks" }
+  { brand: "DJI", type: "DJI Charger", model: "DJI-100W", compatible: "√", remark: "" },
+  { brand: "DJI", type: "DJI Charger", model: "PD-65CN-BYD", compatible: "√", remark: "" },
+  { brand: "DJI", type: "DJI Charger", model: "PC-30CN", compatible: "√", remark: "" },
+  { brand: "DJI", type: "DJI Charger", model: "QC24-CN", compatible: "√", remark: "" },
+  { brand: "DJI", type: "DJI Charger", model: "QC18-US", compatible: "√", remark: "" },
+  { brand: "DJI", type: "DJI Charger", model: "QC18-CN", compatible: "√", remark: "" },
+  { brand: "DJI", type: "Portable Power Station", model: "DY301", compatible: "√", remark: "" },
+  { brand: "DJI", type: "Portable Power Station", model: "DY201", compatible: "√", remark: "" },
+
+  { brand: "Apple", type: "Phone Charger", model: "A2244", compatible: "√", remark: "" },
+  { brand: "Apple", type: "Laptop Adapter", model: "A2452", compatible: "√", remark: "" },
+  { brand: "Apple", type: "Laptop Adapter", model: "A1947", compatible: "√", remark: "" },
+
+  { brand: "Huawei", type: "Phone Charger", model: "HW-200500C00", compatible: "×", remark: "won't charge" },
+  { brand: "Huawei", type: "Phone Charger", model: "HW-200440C00", compatible: "√", remark: "" },
+  { brand: "Huawei", type: "Phone Charger", model: "P0009", compatible: "×", remark: "won't charge" },
+  { brand: "Huawei", type: "Phone Charger", model: "HW-200200CP1", compatible: "√", remark: "" },
+  { brand: "Huawei", type: "Phone Charger", model: "HW-100400C01", compatible: "√", remark: "" },
+  { brand: "Huawei", type: "Phone Charger", model: "HW-059200CHQ", compatible: "√", remark: "" },
+  { brand: "Huawei", type: "Phone Charger", model: "P0003", compatible: "√", remark: "" },
+  { brand: "Huawei", type: "Phone Charger", model: "P0005", compatible: "√", remark: "" },
+  { brand: "Huawei", type: "Laptop Adapter", model: "HW-200450CP0", compatible: "√", remark: "" },
+  { brand: "Huawei", type: "Power Bank", model: "P0008", compatible: "X", remark: "" },
+  { brand: "Huawei", type: "Power Bank", model: "P0001", compatible: "√", remark: "" },
+
+  { brand: "Samsung", type: "Phone Charger", model: "EP-T6530", compatible: "√", remark: "" },
+  { brand: "Samsung", type: "Phone Charger", model: "EP-TA845", compatible: "√", remark: "" },
+  { brand: "Samsung", type: "Phone Charger", model: "EP-TA800", compatible: "×", remark: "won't charge" },
+
+  { brand: "OPPO", type: "Phone Charger", model: "VCBAUACH", compatible: "√", remark: "" },
+  { brand: "OPPO", type: "Phone Charger", model: "VCBAJACH", compatible: "√", remark: "" },
+  { brand: "OPPO", type: "Phone Charger", model: "VCB8HBCH", compatible: "√", remark: "" },
+  { brand: "OPPO", type: "Phone Charger", model: "VCB8JACH", compatible: "√", remark: "" },
+  { brand: "OPPO", type: "Phone Charger", model: "VCB7CACH", compatible: "√", remark: "" },
+  { brand: "OPPO", type: "Phone Charger", model: "VCA7JCCH", compatible: "√", remark: "" },
+  { brand: "OPPO", type: "Phone Charger", model: "VCA5JACH", compatible: "√", remark: "" },
+  { brand: "OPPO", type: "Phone Charger", model: "VC56HBCH", compatible: "√", remark: "" },
+
+  { brand: "Vivo", type: "Phone Charger", model: "V12060L0B0-CN", compatible: "√", remark: "" },
+  { brand: "Vivo", type: "Phone Charger", model: "V200100LB0B0-CN", compatible: "√", remark: "" },
+  { brand: "Vivo", type: "Phone Charger", model: "V8060L0A2-CN", compatible: "√", remark: "" },
+  { brand: "Vivo", type: "Phone Charger", model: "V6660L0B0-CN", compatible: "√", remark: "" },
+  { brand: "Vivo", type: "Phone Charger", model: "V5550L0A0-CN", compatible: "√", remark: "" },
+  { brand: "Vivo", type: "Phone Charger", model: "V3030A-CN", compatible: "√", remark: "" },
+  { brand: "Vivo", type: "Phone Charger", model: "V3330L0A0-CN", compatible: "√", remark: "" },
+  { brand: "Vivo", type: "Phone Charger", model: "BK-T-01Q", compatible: "√", remark: "" },
+
+  { brand: "Xiaomi", type: "Phone Charger", model: "MDY-14-EU", compatible: "√", remark: "" },
+  { brand: "Xiaomi", type: "Phone Charger", model: "MDY-13-ET", compatible: "√", remark: "" },
+  { brand: "Xiaomi", type: "Phone Charger", model: "A07ZM", compatible: "√", remark: "" },
+  { brand: "Xiaomi", type: "Phone Charger", model: "AD651P", compatible: "√", remark: "" },
+  { brand: "Xiaomi", type: "Phone Charger", model: "AD652G", compatible: "√", remark: "" },
+  { brand: "Xiaomi", type: "Phone Charger", model: "MDY-11-EX", compatible: "√", remark: "" },
+  { brand: "Xiaomi", type: "Phone Charger", model: "MDY-10-EH", compatible: "√", remark: "" },
+  { brand: "Xiaomi", type: "Power Bank", model: "PB1022ZM", compatible: "√", remark: "" },
+  { brand: "Xiaomi", type: "Power Bank", model: "PB100DZM", compatible: "√", remark: "" },
+
+  { brand: "1+", type: "Phone Charger", model: "VCK8HACH", compatible: "√", remark: "" },
+  { brand: "1+", type: "Phone Charger", model: "WC065A11JH", compatible: "√", remark: "" },
+
+  { brand: "Honor", type: "Phone Charger", model: "HN-200675CP0", compatible: "√", remark: "" },
+  { brand: "Honor", type: "Phone Charger", model: "HN-200500C01", compatible: "√", remark: "" },
+  { brand: "Honor", type: "Phone Charger", model: "HN-200500CP0", compatible: "√", remark: "" },
+  { brand: "Honor", type: "Phone Charger", model: "HN-110600C02", compatible: "√", remark: "" },
+  { brand: "Honor", type: "Phone Charger", model: "HN-110600CP0", compatible: "√", remark: "" },
+  { brand: "Honor", type: "Phone Charger", model: "HW-100225C00", compatible: "√", remark: "" },
+
+  { brand: "Nubia", type: "Phone Charger", model: "PA0202", compatible: "√", remark: "" },
+  { brand: "Nubia", type: "Phone Charger", model: "NB-A1150A-USBA-C", compatible: "√", remark: "" },
+  { brand: "Nubia", type: "Phone Charger", model: "NB-A930A-USB-1", compatible: "√", remark: "" },
+
+  { brand: "UGREEN", type: "Phone Charger", model: "CD226", compatible: "√", remark: "" },
+  { brand: "UGREEN", type: "Phone Charger", model: "CD270 100W Intelligent", compatible: "√", remark: "" },
+  { brand: "UGREEN", type: "Phone Charger", model: "CD271", compatible: "√", remark: "" },
+  { brand: "UGREEN", type: "Phone Charger", model: "CD289", compatible: "√", remark: "" },
+  { brand: "UGREEN", type: "Phone Charger", model: "CD275", compatible: "√", remark: "" },
+  { brand: "UGREEN", type: "Phone Charger", model: "CD127", compatible: "√", remark: "" },
+  { brand: "UGREEN", type: "Phone Charger", model: "CD137", compatible: "√", remark: "" },
+  { brand: "UGREEN", type: "Phone Charger", model: "CD327", compatible: "√", remark: "" },
+  { brand: "UGREEN", type: "Phone Charger", model: "CD244", compatible: "√", remark: "Requires charging via USB-C" },
+  { brand: "UGREEN", type: "Phone Charger", model: "CD261", compatible: "√", remark: "" },
+  { brand: "UGREEN", type: "Phone Charger", model: "CD344", compatible: "√", remark: "Requires charging via USB-C" },
+
+  { brand: "Anker", type: "Phone Charger", model: "A2148", compatible: "X", remark: "" },
+  { brand: "Anker", type: "Phone Charger", model: "A2678", compatible: "√", remark: "" },
+  { brand: "Anker", type: "Phone Charger", model: "A2332", compatible: "√", remark: "" },
+  { brand: "Anker", type: "Power Bank", model: "A1287", compatible: "√", remark: "" },
+
+  { brand: "Baseus", type: "Phone Charger", model: "CCGAN130CC", compatible: "√", remark: "" },
+  { brand: "Baseus", type: "Phone Charger", model: "CCGAN120C", compatible: "√", remark: "Requires charging via USB-C" },
+  { brand: "Baseus", type: "Phone Charger", model: "CCGAN100UC", compatible: "√", remark: "Requires charging via USB-C" },
+  { brand: "Baseus", type: "Phone Charger", model: "CCGAN67CC3", compatible: "√", remark: "" },
+  { brand: "Baseus", type: "Phone Charger", model: "CCGAN160CC", compatible: "√", remark: "" },
+  { brand: "Baseus", type: "Phone Charger", model: "CCGAN65C5", compatible: "√", remark: "" },
+  { brand: "Baseus", type: "Phone Charger", model: "BS-CH907", compatible: "X", remark: "won't charge" },
+  { brand: "Baseus", type: "Phone Charger", model: "CCXFK20C", compatible: "√", remark: "" },
+  { brand: "Baseus", type: "Phone Charger", model: "CCGAN100-2ACC", compatible: "√", remark: "" },
+  { brand: "Baseus", type: "Power Bank", model: "PPADM2-10", compatible: "√", remark: "" },
+
+  { brand: "PISEN", type: "Phone Charger", model: "TS-C146", compatible: "√", remark: "Requires charging via USB-C" },
+  { brand: "PISEN", type: "Phone Charger", model: "TS-C137", compatible: "√", remark: "" },
+  { brand: "PISEN", type: "Phone Charger", model: "RY01520W1C1AC", compatible: "√", remark: "" },
+  { brand: "PISEN", type: "Phone Charger", model: "TS-C148", compatible: "√", remark: "Requires charging via USB-C" },
+  { brand: "PISEN", type: "Phone Charger", model: "KF24", compatible: "√", remark: "" },
+  { brand: "PISEN", type: "Phone Charger", model: "KF25", compatible: "√", remark: "" },
+  { brand: "PISEN", type: "Power Bank", model: "LS-DY221", compatible: "√", remark: "Requires charging via USB-C" },
+
+  { brand: "Romoss", type: "Phone Charger", model: "AC20C", compatible: "√", remark: "" },
+  { brand: "Romoss", type: "Power Bank", model: "PPH80-611", compatible: "√", remark: "" },
+  { brand: "Romoss", type: "Power Bank", model: "PAC20-392", compatible: "√", remark: "" },
+
+  { brand: "Lenovo", type: "Laptop Adapter", model: "YG130G", compatible: "√", remark: "" },
+  { brand: "Lenovo", type: "Laptop Adapter", model: "ADL100YLC3A", compatible: "√", remark: "" },
+  { brand: "Lenovo", type: "Laptop Adapter", model: "ADLX65YLC3D", compatible: "√", remark: "" },
+
+  { brand: "Dell", type: "Laptop Adapter", model: "DA130PM200", compatible: "√", remark: "" },
+  { brand: "Dell", type: "Laptop Adapter", model: "LA65NM190", compatible: "√", remark: "" },
+  { brand: "Dell", type: "Laptop Adapter", model: "T-20000065", compatible: "√", remark: "" },
+
+  { brand: "HP", type: "Laptop Adapter", model: "TPN-DA20", compatible: "√", remark: "" },
+  { brand: "HP", type: "Laptop Adapter", model: "TPN-LA22", compatible: "√", remark: "" },
+
+  { brand: "Philips", type: "Power Bank", model: "DLP2113U/93", compatible: "√", remark: "" },
+  { brand: "UZER", type: "Power Bank", model: "小方充电宝", compatible: "√", remark: "" },
+  { brand: "Huasunfly", type: "Power Bank", model: "DX467", compatible: "√", remark: "" },
+  { brand: "UGREEN", type: "Power Bank", model: "PB205", compatible: "√", remark: "" },
+  { brand: "Baseus", type: "Power Bank", model: "PPJL65C", compatible: "√", remark: "" },
+  { brand: "PISEN", type: "Power Bank", model: "LS-DY100", compatible: "√", remark: "" }
+];
+
+
+function fuzzyMatch(target, keyword) {
+    target = target.toLowerCase();
+    keyword = keyword.toLowerCase();
+    let tIndex = 0;
+    for (let k of keyword) {
+        tIndex = target.indexOf(k, tIndex);
+        if (tIndex === -1) return false;
+        tIndex++;
+    }
+    return true;
+}
+
+
+const searchInput = document.getElementById('searchInput');
+const suggestionList = document.getElementById('suggestionList');
+
+function showSuggestions(keyword) {
+    suggestionList.innerHTML = '';
+    let matches;
+
+    if (!keyword) {
+
+        matches = partsData.map(row => row[0]);
+    } else {
+
+        matches = partsData
+            .filter(row => fuzzyMatch(row[0], keyword))
+            .map(row => row[0]);
+    }
+
+    if (matches.length === 0) {
+        suggestionList.style.display = 'none';
+        return;
+    }
+
+    matches.forEach(name => {
+        const li = document.createElement('li');
+        li.textContent = name;
+        li.style.padding = '8px 10px';
+        li.style.cursor = 'pointer';
+        li.addEventListener('click', () => {
+            searchInput.value = name;
+            suggestionList.style.display = 'none';
+        });
+        suggestionList.appendChild(li);
+    });
+    suggestionList.style.display = 'block';
+}
+
+
+searchInput.addEventListener('input', function(){
+    showSuggestions(this.value.trim());
+});
+
+
+searchInput.addEventListener('focus', function(){
+    showSuggestions(this.value.trim());
+});
+
+
+searchInput.addEventListener('blur', function(){
+    setTimeout(()=> suggestionList.style.display = 'none', 200);
+});
+
+
+document.getElementById('searchBtn').addEventListener('click',function(){
+    const product = document.getElementById('productSelect').value;
+    const partName = searchInput.value.trim();
+    const table = document.getElementById('resultTable');
+    const tbody = table.querySelector('tbody');
+    tbody.innerHTML = "";
+    if(!product || !partName){
+        alert("Please select a product and enter an accessory name.");
+        return;
+    }
+
+    const matchRow = partsData.find(row=> row[0].toLowerCase() === partName.toLowerCase());
+    if(matchRow){
+        let compat = "", remark = "";
+        const products = [
+            "Osmo Nano",
+            "Osmo 360",
+            "Osmo Action 5 Pro",
+            "Osmo Action 4",
+            "Osmo Action 3",
+            "DJI Action 2",
+            "Osmo Action Intelligent Camera"
+        ];
+        const prodIndex = products.indexOf(product);
+        if (prodIndex > -1) {
+            const compatIndex = 1 + prodIndex * 2; 
+            const remarkIndex = compatIndex + 1;   
+            compat = matchRow[compatIndex];
+
+
+            if (extraRemarks[compat]) {
+                remark = extraRemarks[compat];
+            }
+
+            if (matchRow[remarkIndex]) {
+                remark += (remark ? " " : "") + matchRow[remarkIndex];
+            }
+        }
+        let tr = document.createElement('tr');
+        tr.classList.add("highlight");
+        tr.innerHTML = `<td>${matchRow[0]}</td><td>${product}</td>
+                        <td>${compat || "No data"}</td><td>${remark || ""}</td>`;
+        tbody.appendChild(tr);
+        table.style.display = "table";
+    } else {
+        alert("Accessory not found.");
+        table.style.display = "none";
+    }
+});
+
+
+document.getElementById('productSelect').addEventListener('change', function(){
+    document.getElementById('searchInput').value = '';
+    document.getElementById('resultTable').style.display = 'none';
+});
+
+
+const brandSelect = document.getElementById('brandSelect');
+const typeSelect = document.getElementById('typeSelect');
+const modelInput = document.getElementById('modelInput');
+const modelSuggestionList = document.getElementById('modelSuggestionList');
+
+
+const brands = [...new Set(chargerData.map(c => c.brand).filter(b => b))];
+brands.forEach(b => {
+    let opt = document.createElement('option');
+    opt.value = b;
+    opt.textContent = b;
+    brandSelect.appendChild(opt);
+});
+
+brandSelect.addEventListener('change', function(){
+    typeSelect.innerHTML = '<option value="">Please select a type</option>';
+    modelInput.value = '';
+    document.getElementById('chargerResultTable').style.display = 'none';
+    if (!this.value) return;
+    const types = [...new Set(chargerData.filter(c => c.brand === this.value).map(c => c.type))];
+    types.forEach(t => {
+        let opt = document.createElement('option');
+        opt.value = t;
+        opt.textContent = t;
+        typeSelect.appendChild(opt);
+    });
+});
+
+typeSelect.addEventListener('change', function(){
+    modelInput.value = '';
+    document.getElementById('chargerResultTable').style.display = 'none';
+    showModelSuggestions('');
+});
+
+function showModelSuggestions(keyword) {
+    modelSuggestionList.innerHTML = '';
+    if (!typeSelect.value || !brandSelect.value) {
+        modelSuggestionList.style.display = 'none';
+        return;
+    }
+    let matches = chargerData.filter(c =>
+        c.brand === brandSelect.value &&
+        c.type === typeSelect.value &&
+        c.model.toLowerCase().includes(keyword.trim().toLowerCase())
+    );
+    if (matches.length === 0) {
+        modelSuggestionList.style.display = 'none';
+        return;
+    }
+    matches.forEach(match => {
+        const li = document.createElement('li');
+        li.textContent = match.model;
+        li.style.padding = '8px 10px';
+        li.style.cursor = 'pointer';
+        li.addEventListener('click', () => {
+            modelInput.value = match.model;
+            modelSuggestionList.style.display = 'none';
+        });
+        modelSuggestionList.appendChild(li);
+    });
+    modelSuggestionList.style.display = 'block';
+}
+
+modelInput.addEventListener('input', function(){
+    showModelSuggestions(this.value);
+});
+modelInput.addEventListener('focus', function(){
+    showModelSuggestions(this.value);
+});
+
+document.getElementById('chargerSearchBtn').addEventListener('click', function(){
+    const b = brandSelect.value;
+    const t = typeSelect.value;
+    const m = modelInput.value.trim();
+    const resTable = document.getElementById('chargerResultTable');
+    const tbody = resTable.querySelector('tbody');
+    tbody.innerHTML = '';
+    if (!b || !t || !m) {
+        alert('Please select brand, type, and enter model.');
+        return;
+    }
+    const match = chargerData.find(c => c.brand === b && c.type === t && c.model === m);
+    if (!match) {
+        alert('Model not found.');
+        resTable.style.display = 'none';
+        return;
+    }
+    let tr = document.createElement('tr');
+    tr.innerHTML = `<td>${match.brand}</td><td>${match.type}</td><td>${match.model}</td>
+                    <td>${match.compatible}</td><td>${match.remark || ''}</td>`;
+    tbody.appendChild(tr);
+    resTable.style.display = 'table';
+});
+
+document.querySelectorAll('.tab').forEach(tab=>{
+    tab.addEventListener('click',function(){
+        document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+        this.classList.add('active');
+        document.querySelectorAll('.tab-content').forEach(c=>c.style.display='none');
+        document.getElementById(this.dataset.tab).style.display='block';
+    });
+});
+</script>
+</body>
+</html>
