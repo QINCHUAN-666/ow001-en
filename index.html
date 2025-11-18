@@ -121,7 +121,7 @@
 </style>
 </head>
 <body>
-<header>Osmo Nano Compatibility Checker</header>
+<header>Osmo Series Compatibility Checker</header>
 <!-- Tabs -->
 <div class="tabs">
     <div class="tab active" data-tab="parts">Accessory Compatibility</div>
@@ -133,13 +133,14 @@
     <label>Select Product:</label>
 <select id="productSelect">
     <option value="">Please select a product</option>
-    <option>Osmo Nano</option>
-    <option>Osmo 360</option>
-    <option>Osmo Action 5 Pro</option>
-    <option>Osmo Action 4</option>
-    <option>Osmo Action 3</option>
-    <option>DJI Action 2</option>
-    <option>Osmo Action Intelligent Camera</option>
+    <option value="Osmo Nano">Osmo Nano</option>
+    <option value="Osmo 360">Osmo 360</option>
+    <option value="Osmo Action 6">Osmo Action 6</option>
+    <option value="Osmo Action 5 Pro">Osmo Action 5 Pro</option>
+    <option value="Osmo Action 4">Osmo Action 4</option>
+    <option value="Osmo Action 3">Osmo Action 3</option>
+    <option value="DJI Action 2">DJI Action 2</option>
+    <option value="Osmo Action Intelligent Camera">Osmo Action Intelligent Camera</option>
 </select>
     <label>Select Accessory:</label>
 <div style="position:relative;">
@@ -203,85 +204,113 @@ const extraRemarks = {
 
 /* ===== Accessory data (to be filled later) ===== */
 const partsData = [
-    // Format: [Accessory Name, Osmo Nano, Nano remarks, Osmo 360, 360 remarks, Osmo Action 5 Pro, Osmo Action 4, Osmo Action 3, DJI Action 2, Osmo Action Intelligent Camera]
-  ["Osmo Action Multifunctional Charging Handle", "×", "", "×", "", "√", "", "√", "", "×", "", "×", "", "×", ""],
-  ["Osmo Action FOV Boost Lens", "×", "", "×", "", "√", "", "√", "", "×", "", "×", "", "×", ""],
-  ["Osmo Action Cold Shoe Expansion Kit", "×", "", "×", "", "√", "", "√", "", "√", "", "×", "", "×", ""],
-  ["Osmo Helmet Chin Mount Clip", "√1", "", "√2", "", "√", "", "√", "", "√", "", "√", "", "√", ""],
-  ["Osmo Flexible Mount", "√1", "", "×", "", "√", "", "√", "", "√", "", "√", "", "√", ""],
-  ["Osmo Action Extreme Battery Plus (1950 mAh)", "×", "", "√", "", "√", "", "√", "", "√", "", "×", "", "×", ""],
-  ["Osmo Action 5 Pro Glass Lens Cover", "×", "", "×", "", "√", "", "×", "", "×", "", "×", "", "×", ""],
-  ["Osmo Action Mini Extension Rod", "×", "", "×", "", "√", "", "√", "", "√", "", "×", "", "×", ""],
-  ["Osmo Action 1.5m Extension Rod Kit", "√1", "", "×", "", "√", "", "√", "", "√", "", "√", "", "√", ""],
-  ["Osmo Action 360° Wrist Strap", "×", "", "√", "", "√", "", "√", "", "√", "", "×", "", "×", ""],
-  ["Osmo Action Curved Adhesive Base", "√1", "", "√2", "", "√", "", "√", "", "√", "", "√", "", "√", ""],
-  ["Osmo Action Curved Adhesive Base Kit", "√1", "", "√2", "", "√", "", "√", "", "√", "", "√", "", "√", ""],
-  ["Osmo Action Adhesive Base Kit", "√1", "", "√2", "", "√", "", "√", "", "√", "", "×", "", "×", ""],
-  ["Osmo Action Quick-Release Adapter Mount", "×", "", "√2", "", "√", "", "√", "", "√", "", "×", "", "×", ""],
-  ["Osmo Action Mounting Kit", "×", "", "×", "", "√", "", "√", "", "√", "", "√", "", "√", ""],
-  ["Osmo Magnetic Ball-Joint Adapter Mount", "×", "", "√", "", "√", "", "√", "", "√", "", "√", "", "×", ""],
-  ["Osmo Locking Screw", "√", "", "√", "", "√", "", "√", "", "√", "", "√", "", "√", ""],
-  ["Osmo Backpack Strap Mount", "√1", "", "√2", "", "√", "", "√", "", "√", "", "√", "", "√", ""],
-  ["Osmo Action Hanging Neck Mount", "√1", "", "√2", "", "√", "", "√", "", "√", "", "√", "", "√", ""],
-  ["Osmo Action Mini Handlebar Mount", "×", "", "√", "", "√", "", "√", "", "√", "", "×", "", "×", ""],
-  ["Osmo Action Handlebar Mount", "√", "", "√2", "", "√", "", "√", "", "√", "", "√", "", "√", ""],
-  ["Osmo Action Suction Cup Mount", "√", "", "√2", "", "√", "", "√", "", "√", "", "√", "", "√", ""],
-  ["Osmo Action Chest Strap Mount", "√", "", "√2", "", "√", "", "√", "", "√", "", "√", "", "√", ""],
-  ["Osmo Action Helmet Chin Mount", "√", "", "√2", "", "√", "", "√", "", "√", "", "√", "", "√", ""],
-  ["Osmo Action Biking Accessory Kit", "√", "", "√2", "", "√", "", "√", "", "√", "", "√", "", "√", ""],
-  ["Osmo Action Road Cycling Accessory Kit", "×", "", "√", "", "√", "", "√", "", "√", "", "×", "", "×", ""],
-  ["Osmo Action Bike Seat Rail Mount", "√1", "", "√2", "", "√", "", "√", "", "√", "", "√", "", "√", ""],
-  ["Osmo Action Surfing Tethers", "√", "", "√", "", "√", "", "√", "", "√", "", "√", "", "√", ""],
-  ["Osmo Action Surfing Tether Kit", "×", "", "√2", "", "√", "", "√", "", "√", "", "×", "", "×", ""],
-  ["Osmo Action 60m Waterproof Case", "×", "", "×", "", "√", "", "√", "", "√", "", "×", "", "×", ""],
-  ["Osmo Action Diving Accessory Kit", "×", "", "×", "", "√", "", "√", "", "√", "", "×", "", "×", ""],
-  ["DJI Floating Handle", "√", "", "×", "", "√", "", "√", "", "√", "", "√", "", "√", ""],
-  ["Osmo Action ND Filters Set", "×", "", "×", "", "√", "", "√", "", "√", "", "×", "", "×", ""],
-  ["Osmo Action 4 Glass Lens Cover", "×", "", "×", "", "×", "", "√", "", "×", "", "×", "", "×", ""],
-  ["Osmo Action Horizontal-Vertical Protective Frame", "×", "", "×", "", "√", "", "√", "", "√", "", "×", "", "×", ""],
-  ["Osmo Action GPS Bluetooth Remote Controller", "×", "", "√", "", "√", "", "√", "", "×", "", "×", "", "×", ""],
-  ["Osmo Action 3.5mm Audio Adapter", "×", "", "×", "", "√", "", "√", "", "√", "", "×", "", "×", ""],
-  ["Osmo Action Extreme Battery", "×", "", "√", "", "√", "", "√", "", "√", "", "×", "", "×", ""],
-  ["Osmo Action Multifunctional Battery Case", "×", "", "×", "", "×", "", "√", "", "√", "", "×", "", "×", ""],
-  ["Osmo Action Multifunctional Battery Case 2", "×", "", "√", "", "√", "", "√", "", "√", "", "×", "", "×", ""],
-  ["Type-C to Type-C PD Cable", "√", "", "×", "", "√", "", "√", "", "√", "", "√", "", "√", ""],
-  ["DJI 30W USB-C Charger", "√", "", "√", "", "√", "", "√", "", "√", "", "√", "", "√", ""],
-  ["DJI Action 2 Magnetic Protective Case", "×", "", "×", "", "×", "", "×", "", "×", "", "√", "", "×", ""],
-  ["DJI Action 2 Remote Control Extension Rod", "×", "", "×", "", "×", "", "×", "", "×", "", "√", "", "×", ""],
-  ["DJI Action 2 Waterproof Case", "×", "", "×", "", "×", "", "×", "", "×", "", "√", "", "×", ""],
-  ["DJI Action 2 Macro Lens", "×", "", "×", "", "×", "", "×", "", "×", "", "√", "", "×", ""],
-  ["DJI Action 2 Magnetic Clip", "×", "", "×", "", "×", "", "×", "", "×", "", "√", "", "×", ""],
-  ["DJI Action 2 Magnetic Ball-Joint Adapter Mount", "×", "", "×", "", "√", "", "√", "", "√", "", "√", "", "×", ""],
-  ["Osmo Action Bite Mount", "√", "", "√2", "", "√", "", "√", "", "√", "", "√", "", "√", ""],
-  ["Osmo 360 Battery Extension Rod", "×", "", "√", "", "×", "", "×", "", "×", "", "×", "", "×", ""],
-  ["Osmo Motorcycle Heavy-Duty Mount", "√", "", "√", "", "×", "", "×", "", "×", "", "×", "", "×", ""],
-  ["Osmo Adjustable Quick-Release Adapter Mount", "×", "", "√", "", "×", "", "×", "", "×", "", "×", "", "×", ""],
-  ["Osmo 360 Transparent Lens Protectors", "×", "", "√", "", "×", "", "×", "", "×", "", "×", "", "×", ""],
-  ["Osmo Hanging Neck Mount Max", "√1", "", "√2", "", "√", "", "√", "", "√", "", "√", "", "√", ""],
-  ["Osmo Third-Person Helmet Mount Kit", "×", "", "√", "", "×", "", "×", "", "×", "", "×", "", "×", ""],
-  ["Osmo 70cm Invisible Selfie Stick", "√", "", "√", "", "×", "", "×", "", "×", "", "×", "", "×", ""],
-  ["Osmo 1m High-Strength Carbon Fiber Invisible Selfie Stick", "√", "", "√", "", "×", "", "×", "", "×", "", "×", "", "×", ""],
-  ["Osmo 1.2m Invisible Selfie Stick Kit", "√", "", "√", "", "×", "", "×", "", "×", "", "×", "", "×", ""],
-  ["Osmo 1.6m Tripod Selfie Stick", "√", "", "√", "", "×", "", "×", "", "×", "", "×", "", "×", ""],
-  ["Osmo 2.5m Extended Carbon Fiber Selfie Stick", "√", "", "√", "", "×", "", "×", "", "×", "", "×", "", "×", ""],
-  ["Osmo Dual Heavy-Duty Clamp", "√", "", "√", "", "√", "", "√", "", "√", "", "√", "", "√", ""],
-  ["Osmo Vortex Rotating Handle", "×", "", "√", "", "×", "", "×", "", "×", "", "×", "", "×", ""],
-  ["Osmo Bike Rear Mount Kit", "×", "", "√", "", "×", "", "×", "", "×", "", "×", "", "×", ""],
-  ["Osmo Action Battery", "×", "", "×", "", "×", "", "×", "", "×", "", "×", "", "√", ""],
-  ["Osmo 360 Carrying Bag", "×", "", "√", "", "×", "", "×", "", "×", "", "×", "", "×", ""],
-  ["Osmo Action Floating Case", "×", "", "×", "", "√", "", "√", "", "√", "", "×", "", "×", ""],
-  ["DJI Action 2 Magnetic Adapter Mount", "×", "", "×", "", "×", "", "×", "", "×", "", "√", "", "×", ""],
-  ["CYNOVA Osmo Action Dual 3.5mm Adapter", "×", "", "×", "", "×", "", "×", "", "×", "", "×", "", "√", ""],
-  ["Osmo Action Lens Hood", "×", "", "×", "", "√", "", "√", "", "×", "", "×", "", "×", ""],
-  ["Osmo Action Carrying Bag", "×", "", "×", "", "√", "", "√", "", "√", "", "×", "", "×", ""],
-  ["Osmo Action 4 Protective Camera Decal", "×", "", "×", "", "√", "", "√", "", "√", "", "×", "", "×", ""],
-  ["Osmo Magnetic Headband", "√", "", "×", "", "×", "", "×", "", "×", "", "×", "", "×", ""],
-  ["Osmo Magnetic Chest Strap", "√", "", "×", "", "×", "", "×", "", "×", "", "×", "", "×", ""],
-  ["Osmo Dual-Direction Quick-Release Foldable Adapter Mount", "√", "", "×", "", "×", "", "×", "", "×", "", "×", "", "×", ""],
-  ["Osmo Nano ND Filter Set", "√", "", "×", "", "×", "", "×", "", "×", "", "×", "", "×", ""],
-  ["Osmo Nano Glass Lens Cover", "√", "", "×", "", "×", "", "×", "", "×", "", "×", "", "×", ""],
-  ["Osmo Nano Dual-Direction Magnetic Ball-Joint Adapter Mount", "√", "", "×", "", "×", "", "×", "", "×", "", "×", "", "×", ""]
+["Osmo Action Extreme Battery Plus (1950 mAh)", "×","", "√","", "√","", "√","", "√","", "√","", "×","", "×","Osmo Action 5 Pro Camera Battery After updating to the latest firmware, Osmo Action 3 and Osmo Action 4 support use with the Osmo Action Extreme Battery Plus (1950 mAh)."],
+["Osmo Action Battery", "×","", "×","", "×","", "×","", "×","", "×","", "×","", "√","Osmo Action Camera Battery"],
+["Osmo Action Extreme Battery", "×","", "√","", "√","", "√","", "√","", "√","", "×","", "×","Osmo Action 3 & 4 Camera Battery"],
+["Osmo Action Multifunctional Battery Case", "×","", "√","", "×","", "×","", "√","", "√","", "×","", "×","Not compatible with the Osmo Action Extreme Battery Plus (1950 mAh) for Osmo Action 5 Pro Reason: Cannot be fully charged"],
+["Osmo Action Multifunctional Battery Case 2", "×","", "√","", "√","", "√","", "√","", "√","", "×","", "×","Regarding Packaging Box Sticker 2, see the knowledge base: https://wing.djicorp.com/user/knowledge/en/2/00201002608"],
+["Osmo 360 Battery Extension Rod", "×","", "√","", "×","", "×","", "×","", "×","", "×","", "×",""],
+["Osmo Motorcycle Heavy-Duty Mount", "√","", "√","", "√*","", "×","", "×","", "×","", "×","", "×","Osmo Adjustable Quick-Release Adapter Mount is required for compatibility."],
+["Osmo Adjustable Quick-Release Adapter Mount", "×","", "√","", "√","", "×","", "×","", "×","", "×","", "×",""],
+["Osmo 360 Transparent Lens Protectors", "×","", "√","", "×","", "×","", "×","", "×","", "×","", "×",""],
+["Osmo Hanging Neck Mount Max", "√","", "√*","", "√","", "√","", "√","", "√","", "×","", "×","*Osmo 360 requires a separately purchased Osmo Action Quick-Release Adapter Mount for use. Osmo Nano: A bidirectional quick-release folded adapter mount is required for purchase."],
+["Osmo Third-Person Helmet Mount Kit", "×","", "√","", "×","", "×","", "×","", "×","", "×","", "×",""],
+["Osmo 70cm Invisible Selfie Stick", "√","", "√","", "√*","", "√*","", "√*","", "√*","", "×","", "×","Osmo Adjustable Quick-Release Adapter Mount is required for compatibility."],
+["Osmo 1m High-Strength Carbon Fiber Invisible Selfie Stick", "√","", "√","", "√*","", "√*","", "√*","", "√*","", "×","", "×","Osmo Adjustable Quick-Release Adapter Mount is required for compatibility."],
+["Osmo 1.2m Invisible Selfie Stick Kit", "√","", "√","", "√*","", "√*","", "√*","", "√*","", "×","", "×","Osmo Adjustable Quick-Release Adapter Mount is required for compatibility."],
+["Osmo 1.6m Tripod Selfie Stick", "√","", "√","", "√*","", "√*","", "√*","", "√*","", "×","", "×","Osmo Adjustable Quick-Release Adapter Mount is required for compatibility."],
+["Osmo 2.5m Extended Carbon Fiber Selfie Stick", "√","", "√","", "√*","", "√*","", "√*","", "√*","", "×","", "×","Osmo Adjustable Quick-Release Adapter Mount is required for compatibility."],
+["Osmo Dual Heavy-Duty Clamp", "√","", "√","", "√","", "√","", "√","", "√","", "×","", "×",""],
+["Osmo Vortex Rotating Handle", "×","", "√","", "×","", "×","", "×","", "×","", "×","", "×",""],
+["Osmo 360 Carrying Bag", "×","", "√","", "×","", "×","", "×","", "×","", "×","", "×",""],
+["Osmo Bike Rear Mount Kit", "×","", "√","", "×","", "×","", "×","", "×","", "×","", "×",""],
+["Osmo Action Biking Accessory Kit", "√","", "√*","", "√","", "√","", "√","", "√","", "√","", "×","*Osmo 360 requires a separately purchased Osmo Action Quick-Release Adapter Mount for use."],
+["Osmo Action Diving Accessory Kit", "×","", "×","", "×","", "√","", "√","", "√","", "×","", "×",""],
+["Osmo Action 5 Pro Glass Lens Cover", "×","", "×","", "×","", "√","", "×","", "×","", "×","", "×",""],
+["Osmo Action FOV Boost Lens", "×","", "×","", "×","", "√","", "√","", "×","", "×","", "×","Osmo Nano: The handle features a one-way quick-release part."],
+["Osmo Action Multifunctional Charging Handle", "×","", "×","", "× The previous version of the adapter must be force-fitted for compatibility","", "√","", "√","", "×","", "×","", "×",""],
+["Osmo Action Cold Shoe Expansion Kit", "×","", "×","", "×","", "√","", "√","", "√","", "×","", "×",""],
+["Osmo Helmet Chin Mount Clip", "√","", "√","", "√","", "√","", "√","", "√","", "√","", "×","Osmo Nano: Requires purchase of the bidirectional quick-release folded adapter. Osmo 360: The Osmo Action Quick-Release Adapter Mount is sold separately."],
+["Osmo Flexible Mount", "√","", "×","", "√","", "√","", "√","", "√","", "√","", "×","Osmo Nano: A bidirectional quick-release folded adapter mount is required for purchase."],
+["DJI Mic 3", "√","", "√","", "√","", "√","", "√","", "√","", "√","", "×",""],
+["DJI Mic 2", "√","", "√","", "√","", "√","", "√","", "√","", "√","", "×",""],
+["DJI Mic", "×","", "√","", "√","", "√","", "√","", "√","", "√","", "×","Osmo Action requires third-party accessories when used with DJI Mic."],
+["DJI Mic Mini", "√","", "√","", "√","", "√","", "√","", "√","", "√","", "×",""],
+["DJI Floating Handle", "√","", "×","", "√","", "√","", "√","", "√","", "√","", "√","Osmo Action must be used with the official protective frame when using the DJI Floating Handle."],
+["Osmo Action Floating Case", "×","", "×","", "×","", "√","", "√","", "√","", "×","", "×",""],
+["DJI Action 2 Magnetic Ball-Joint Adapter Mount", "×","", "×","", "×","", "√","", "√","", "√","", "√","", "×","It is recommended to use the Osmo Action 5 Pro/4/3 with the DJI Action 2 Magnetic Ball-Joint Adapter Mount in static scenarios."],
+["DJI Action 2 Magnetic Adapter Mount", "×","", "×","", "×","", "×","", "×","", "×","", "√","", "×","It is possible that noises may occur or the camera may be detached when using Osmo Action 3 with DJI Action 2 Magnetic Adapter Mount in high-intensity sport scenarios."],
+["Osmo Action Mounting Kit", "×","", "×","", "√","", "√","", "√","", "√","", "√","", "√",""],
+["DJI Mini Bag", "√","", "√","", "√","", "√","", "√","", "√","", "√","", "√",""],
+["DJI Sling Pouch", "√","", "√","", "√","", "√","", "√","", "√","", "√","", "√",""],
+["DJI 30W USB-C Charger", "√","", "√","", "√","", "√","", "√","", "√","", "×","", "×","Mainly refers to the fast charging function. Osmo Action and DJI Action 2 can be used, but do not support fast charging."],
+["DJI Action 2 Front Touchscreen Module", "×","", "×","", "×","", "×","", "×","", "×","", "√","", "×",""],
+["DJI Action 2 Power Module", "×","", "×","", "×","", "×","", "×","", "×","", "√","", "×",""],
+["DJI Action 2 Magnetic Protective Case", "×","", "×","", "×","", "×","", "×","", "×","", "√","", "×",""],
+["DJI Action 2 Remote Control Extension Rod", "×","", "※","", "※","", "※","", "※","", "※","", "√","", "×","1. This accessory is fully compatible with DJI Action 2. 2. Some features of Osmo Action 3/4/5 Pro are available. For details, please refer to the knowledge base: https://wing.djicorp.com/user/knowledge/en/2/00200040271"],
+["DJI Action 2 Waterproof Case", "×","", "×","", "×","", "×","", "×","", "×","", "√","", "×",""],
+["DJI Action 2 Macro Lens", "×","", "×","", "×","", "×","", "×","", "×","", "√","", "×",""],
+["DJI Action 2 Magnetic Headband", "×","", "×","", "×","", "×","", "×","", "×","", "√","", "×",""],
+["Osmo Action ND Filter Set", "×","", "×","", "×","", "×","", "×","", "×","", "×","", "√","The ND Filter Combo for Osmo Action requires you to remove the lens protector before mounting the filter."],
+["Osmo Action Lens Protector", "×","", "×","", "×","", "×","", "×","", "×","", "×","", "√",""],
+["Osmo Action Horizontal-Vertical Protective Frame", "×","", "×","", "×","", "√","", "√","", "√","", "×","", "×",""],
+["Osmo Action Quick-Release Adapter Mount", "×","", "√","", "√*","", "√","", "√","", "√","", "×","", "×","The Osmo Action 3 Quick-Release Adapter Mount features added silicone on top of the DJI Action 2 Magnetic Adapter Mount design, so it only supports Osmo Action 3. Osmo Action 6 uses a bidirectional magnetic design, and the old version of the quick-release adapter requires forced installation."],
+["Osmo Action 3 Rubber Lens Protector", "×","", "×","", "×","", "×","", "×","", "√","", "×","", "×",""],
+["Osmo Action 60m Waterproof Case", "×","", "×","", "×","", "√","", "√","", "√","", "×","", "×",""],
+["Osmo Action Adhesive Base Kit", "√","", "× The previous version of the adapter must be force-fitted for compatibility","", "√","", "√","", "√","", "√","", "×","", "×","The Osmo Action 3 Adhesive Base Kit includes the Osmo Action Quick-Release Adapter Mount. If using with DJI Action 2, a DJI Action 2 Magnetic Adapter Mount is required. If connecting the Osmo Action, it must be used with the Osmo Action Protective Frame. Osmo Nano: Requires purchase of the bidirectional quick-release folded adapter."],
+["Osmo Action 3 Lens Protective Cover", "×","", "×","", "×","", "×","", "×","", "√","", "×","", "×",""],
+["Osmo Action 1.5m Extension Rod Kit", "√","", "√ Need to use Osmo Action Quick-Release Adapter, ensure the camera and extension rod are not skewed","", "√","", "√","", "√","", "√","", "√","", "√","The Osmo Action 3 1.5m Extension Rod Kit includes the Osmo Action 3 Quick-Release Adapter Mount, so it only supports Osmo Action 3. If connecting DJI Action 2, please use the DJI Action 2 Magnetic Adapter Mount. If Osmo Action needs to be connected and used, it must be paired with the Osmo Action Protective Frame. Osmo Nano: Requires purchase of the bidirectional quick-release folded adapter."],
+["Osmo Magnetic Ball-Joint Adapter Mount", "×","Osmo Nano: The ball head is equipped with a unidirectional Quick-Release Adapter Mount.", "×","", "× The previous version of the adapter must be force-fitted for compatibility","", "√","", "√","", "√","", "√","", "×","Osmo Nano: The ball head is equipped with a unidirectional Quick-Release Adapter Mount."],
+["Osmo Action Suction Cup Mount", "√","Osmo Nano: Requires purchase of a bi-directional Quick-Release folded Adapter Mount.", "√*","The Osmo 360 requires the Osmo Action Quick-Release Adapter Mount, which must be purchased separately.", "√","", "√","", "√","", "√","", "√","", "√","Osmo Nano: Requires purchase of a bi-directional Quick-Release folded Adapter Mount.*The Osmo 360 requires the Osmo Action Quick-Release Adapter Mount, which must be purchased separately.Osmo Action 3 must be used with the Osmo Action 3 Quick-Release Adapter Mount.DJI Action 2 requires the DJI Action 2 Magnetic Adapter Mount for use.Osmo Action must be ued with the Osmo Action Protective Frame."],
+["Osmo Action Helmet Chin Mount", "√","", "√*","The Osmo 360 requires the Osmo Action Quick-Release Adapter Mount, which must be purchased separately.", "√","", "√","", "√","", "√","", "√","", "√","Osmo Nano: Requires purchase of a bi-directional Quick-Release folded Adapter Mount.*The Osmo 360 requires the Osmo Action Quick-Release Adapter Mount, which must be purchased separately.Osmo Action 3 must be used with the Osmo Action 3 Quick-Release Adapter Mount.DJI Action 2 requires the DJI Action 2 Magnetic Adapter Mount for use.Osmo Action must be ued with the Osmo Action Protective Frame."],
+["Osmo Action Surfing Tether", "√","", "√*","The Osmo 360 requires the Osmo Action Quick-Release Adapter Mount, which must be purchased separately.", "√","", "√","", "√","", "√","", "√","", "√","*The Osmo 360 requires the Osmo Action Quick-Release Adapter Mount, which must be purchased separately. Mounting method as shown in Figure: Osmo Action 3 must be used with the Osmo Action 3 Quick-Release Adapter Mount. When using DJI Action 2, the strap needs to be threaded through the hole at the bottom of the Quick-Release Adapter Mount. Osmo Action must be used with the Osmo Action Protective Frame."],
+["Osmo Action Chest Strap Mount", "√","", "√*","Osmo 360 requires a separately purchased Osmo Action Quick-Release Adapter Mount to be used together;", "√","", "√","", "√","", "√","", "√","", "√","*Osmo 360 requires a separately purchased Osmo Action Quick-Release Adapter Mount to be used together; Osmo Action 3 must be used with the Osmo Action 3 Quick-Release Adapter Mount. DJI Action 2 requires the DJI Action 2 Magnetic Adapter Mount for use. Osmo Action must be used with the Osmo Action Protective Frame."],
+["Osmo Action Handlebar Mount", "√","", "√*","The Osmo 360 requires the Osmo Action Quick-Release Adapter Mount, which must be purchased separately.", "√","", "√","", "√","", "√","", "√","", "√","*The Osmo 360 requires the Osmo Action Quick-Release Adapter Mount, which must be purchased separately. Osmo Action 3 must be used with the Osmo Action 3 Quick-Release Adapter Mount. DJI Action 2 requires the DJI Action 2 Magnetic Adapter Mount for use. Osmo Action must be used with the Osmo Action Protective Frame. Ball head diameter: 20mm."],
+["Osmo Locking Screw", "√","", "√","", "√","", "√","", "√","", "√","", "√","", "√","Specification: 1/4 Locking Screw Bolt."],
+["Osmo Action Extension Rod", "","", "√","", "√","", "√","", "√","", "√","", "√","", "√","1. The Osmo Action 3 must be used with the Osmo Action 3 Quick-Release Adapter Mount. 2. DJI Action 2 must be used with the DJI Action 2 Magnetic Adapter Mount."],
+["CYNOVA Osmo Action Dual 3.5mm Adapter", "×","", "×","", "×","", "×","", "×","", "×","", "×","", "√",""],
+["Osmo Backpack Strap Mount", "√","", "√*","Osmo 360 requires the Osmo Action Quick-Release Adapter Mount, which is sold separately.", "√","", "√","", "√","", "√","", "√","", "√","*Osmo 360 requires the Osmo Action Quick-Release Adapter Mount, which is sold separately. Osmo Nano: A bidirectional quick-release folded adapter mount is required for purchase."],
+["Osmo Action Hanging Neck Mount", "√","", "√*","Osmo 360 requires the Osmo Action Quick-Release Adapter Mount, which is sold separately.", "√","", "√","", "√","", "√","", "√","", "√","Osmo 360 requires the Osmo Action Quick-Release Adapter Mount, which is sold separately. Osmo Nano: A bidirectional quick-release folded adapter mount is required for purchase."],
+["Osmo Action ND Filter Set", "×","", "×","", "×","", "√","", "√","", "√","", "×","", "×",""],
+["Osmo Action Surfing Tether Kit", "×","", "√*","Osmo 360 requires a separately purchased Osmo Action Quick-Release Adapter Mount for use.", "× The previous version of the adapter must be force-fitted for compatibility","", "√","", "√","", "√","", "×","", "×","*Osmo 360 requires a separately purchased Osmo Action Quick-Release Adapter Mount for use. Mounting method as shown in Figure: Osmo Nano: A bidirectional quick-release folded adapter mount is required for purchase."],
+["Osmo Action Bike Seat Rail Mount", "√","", "√*","Osmo 360 requires the Osmo Action Quick-Release Adapter Mount, which is sold separately.", "√","", "√","", "√","", "√","", "√","", "√","*Osmo 360 requires the Osmo Action Quick-Release Adapter Mount, which is sold separately."],
+["Osmo Action Curved Adhesive Base", "√","", "√*","Osmo 360 requires the Osmo Action Quick-Release Adapter Mount, which is sold separately.", "√","", "√","", "√","", "√","", "√","", "√","*Osmo 360 requires the Osmo Action Quick-Release Adapter Mount, which is sold separately."],
+["Osmo Action Curved Adhesive Base Kit", "√","", "√","", "√","", "√","", "√","", "√","", "√","", "√","Osmo Nano: The bidirectional quick-release folded adapter needs to be purchased separately."],
+["Osmo Action Mini Extension Rod", "×","", "×","", "× The previous version of the adapter must be force-fitted for compatibility","", "√","", "√","", "√","", "×","", "×","Osmo Nano: There is a one-way quick-release part on the extension rod."],
+["Osmo Action 360° Wrist Strap", "×","", "×","", "× The previous version of the adapter must be force-fitted for compatibility","", "√","", "√","", "√","", "×","", "×",""],
+["Osmo Action Mini Handlebar Mount", "×","", "×","", "× The previous version of the adapter must be force-fitted for compatibility","", "√","", "√","", "√","", "×","", "×","Osmo Nano: The ball head is equipped with a unidirectional Quick-Release Adapter Mount."],
+["Osmo Action Bite Mount", "√","", "×","", "√","", "√","", "√","", "√","", "√","", "√",""],
+["Osmo Action GPS Bluetooth Remote Controller", "×","Osmo Nano: Not compatible at launch, compatible later.", "√","", "√","", "√","", "√","", "×","", "×","", "×","Osmo Nano: Not compatible at launch, compatible later."],
+["Osmo Action Road Cycling Accessory Kit", "×","", "√*","Osmo 360 requires the Osmo Action Quick-Release Adapter Mount, which is sold separately.", "× The previous version of the adapter must be force-fitted for compatibility","", "√","", "√","", "√","", "×","", "×","*Osmo 360 requires the Osmo Action Quick-Release Adapter Mount, which is sold separately."],
+["Osmo Action Lens Hood", "×","", "×","", "×","", "√","", "√","", "×","", "×","", "×",""],
+["Osmo Action Quick-Release Adapter Mount (Mini)", "×","", "√","", "× The previous version of the adapter must be force-fitted for compatibility","", "√","", "√","", "√","", "×","", "×",""],
+["Osmo Action 4 Glass Lens Cover", "×","", "×","", "×","", "×","", "√","", "×","", "×","", "×",""],
+["Osmo Action 3.5mm Audio Adapter", "×","", "×","", "√","", "√","", "√","", "×","", "×","", "×",""],
+["Osmo Action Carrying Bag", "×","", "×","", "×","", "√","", "√","", "√","", "×","", "×",""],
+["Osmo Action 4 Protective Camera Decal", "×","", "×","", "×","", "√","", "√","", "√","", "×","", "×",""],
+["Type-C to Type-C PD Cable", "√","", "×","Osmo 360: This cable is 2.0, while the standard package is 3.1. To prevent users from purchasing the wrong one, it is marked as incompatible.", "√","", "√","", "√","", "√","", "√","", "√","Osmo 360: This cable is 2.0, while the standard package is 3.1. To prevent users from purchasing the wrong one, it is marked as incompatible."],
+["Osmo Magnetic Headband", "√","", "×","", "×","", "×","", "×","", "×","", "×","", "×",""],
+["Osmo Magnetic Chest Strap", "√","", "×","", "×","", "×","", "×","", "×","", "×","", "×",""],
+["Osmo Nano ND Filter Set", "√","", "×","", "×","", "×","", "×","", "×","", "×","", "×",""],
+["Osmo Nano Glass Lens Cover", "√","", "×","", "×","", "×","", "×","", "×","", "×","", "×",""],
+["Osmo Nano Dual-Direction Magnetic Ball-Joint Adapter Mount", "√","", "×","", "×","", "×","", "×","", "×","", "×","", "×",""],
+["Osmo Dual-Direction Quick-Release Foldable Adapter Mount", "√","", "×","", "×","", "×","", "×","", "×","", "×","", "×",""],
+["Osmo Nano Magnetic Hat Clip", "√","", "×","", "×","", "×","", "×","", "×","", "×","", "×",""],
+["Osmo Folding Arm Kit", "×","", "×","", "× The previous version of the adapter must be force-fitted for compatibility","", "√","", "√","", "√","", "×","", "×",""],
+["Osmo Action Multifunctional Battery Case 3", "×","", "√","", "√","", "√","", "√","", "×","", "×","", "×",""],
+["Osmo Dual-Direction Quick-Release Adapter Mount", "×","", "×","", "√","", "× Hard assembly is required for compatibility","", "× Hard assembly is required for compatibility","", "×","", "×","", "×",""],
+["Osmo Action 6 Telephoto Lens", "×","", "×","", "√","", "×","", "×","", "×","", "×","", "×",""],
+["Osmo Action 6 FOV Boost Lens", "×","", "×","", "√","", "×","", "×","", "×","", "×","", "×",""],
+["Osmo Action 6 Waterproof Case", "×","", "×","", "√","", "×","", "×","", "×","", "×","", "×",""],
+["Osmo Action 6 ND Filter Set", "×","", "×","", "√","", "×","", "×","", "×","", "×","", "×",""],
+["Osmo Dual-Direction Quick-Release Folded Adapter Mount", "×","", "×","", "√","", "× Hard assembly is required for compatibility","", "× Hard assembly is required for compatibility","", "×","", "×","", "×",""],
+["Osmo Action Dual-Direction Battery Handle", "×","", "×","", "√","", "×","", "×","", "×","", "×","", "×",""],
+["Osmo Action Dual-Direction Mini Extension Rod", "×","", "×","", "√","", "×","", "×","", "×","", "×","", "×",""],
+["Osmo Action Dual-Direction Mini Handlebar Mount", "×","", "×","", "√","", "×","", "×","", "×","", "×","", "×",""],
+["Osmo Action Dual-Direction 360° Wrist Strap", "×","", "×","", "√","", "×","", "×","", "×","", "×","", "×",""]
 ];
+
+
 
 /* ===== Charger data (to be filled later) ===== */
 const chargerData = [
@@ -482,54 +511,59 @@ searchInput.addEventListener('blur', function(){
 });
 
 
-document.getElementById('searchBtn').addEventListener('click',function(){
+document.getElementById('searchBtn').addEventListener('click', function () {
     const product = document.getElementById('productSelect').value;
     const partName = searchInput.value.trim();
     const table = document.getElementById('resultTable');
     const tbody = table.querySelector('tbody');
     tbody.innerHTML = "";
-    if(!product || !partName){
+
+    if (!product || !partName) {
         alert("Please select a product and enter an accessory name.");
         return;
     }
 
-    const matchRow = partsData.find(row=> row[0].toLowerCase() === partName.toLowerCase());
-    if(matchRow){
-        let compat = "", remark = "";
-        const products = [
-            "Osmo Nano",
-            "Osmo 360",
-            "Osmo Action 5 Pro",
-            "Osmo Action 4",
-            "Osmo Action 3",
-            "DJI Action 2",
-            "Osmo Action Intelligent Camera"
-        ];
-        const prodIndex = products.indexOf(product);
-        if (prodIndex > -1) {
-            const compatIndex = 1 + prodIndex * 2; 
-            const remarkIndex = compatIndex + 1;   
-            compat = matchRow[compatIndex];
-
-
-            if (extraRemarks[compat]) {
-                remark = extraRemarks[compat];
-            }
-
-            if (matchRow[remarkIndex]) {
-                remark += (remark ? " " : "") + matchRow[remarkIndex];
-            }
-        }
-        let tr = document.createElement('tr');
-        tr.classList.add("highlight");
-        tr.innerHTML = `<td>${matchRow[0]}</td><td>${product}</td>
-                        <td>${compat || "No data"}</td><td>${remark || ""}</td>`;
-        tbody.appendChild(tr);
-        table.style.display = "table";
-    } else {
+    const matchRow = partsData.find(row => row[0].toLowerCase() === partName.toLowerCase());
+    if (!matchRow) {
         alert("Accessory not found.");
         table.style.display = "none";
+        return;
     }
+
+    const products = [
+        "Osmo Nano",
+        "Osmo 360",
+        "Osmo Action 6",
+        "Osmo Action 5 Pro",
+        "Osmo Action 4",
+        "Osmo Action 3",
+        "DJI Action 2",
+        "Osmo Action Intelligent Camera"
+    ];
+    const prodIndex = products.indexOf(product);
+    if (prodIndex === -1) {
+        alert("Unknown product selection.");
+        return;
+    }
+
+
+    const compatIndex = 1 + prodIndex * 2;
+    const compat = matchRow[compatIndex] || "No data";
+
+
+    const noteIndex = matchRow.length - 1;
+    const remark = matchRow[noteIndex] || "";
+
+    const tr = document.createElement('tr');
+    tr.classList.add("highlight");
+    tr.innerHTML = `
+        <td>${matchRow[0]}</td>
+        <td>${product}</td>
+        <td>${compat}</td>
+        <td style="text-align:left;white-space:pre-line">${remark}</td>
+    `;
+    tbody.appendChild(tr);
+    table.style.display = "table";
 });
 
 
